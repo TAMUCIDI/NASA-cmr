@@ -1,2 +1,2 @@
-# NASA-cmr
-spider for nasa
+# cmr-spider
+NASA smr spider
