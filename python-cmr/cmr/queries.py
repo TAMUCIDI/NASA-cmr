@@ -48,7 +48,7 @@ class Query(object):
         :limit: The number of results to return
         :returns: query results as a list
         """
-        print("Got limit", limit)
+        print("Got The number of results to return (limit)", limit)
 
         page_size = min(limit, 2000)
         url = self._build_url()
@@ -75,7 +75,11 @@ class Query(object):
                     break
                 if self.export_path != "" and len(results) > 30000:
                     # if length of results if over 30000 then write data to json
-                    export_file_path = os.path.join(self.export_path, "{}_{}.json".format(self.params['provider'], page))
+                    if self.params['provider']:
+                        provider = self.params['provider']
+                    else:
+                        provider = "__"
+                    export_file_path = os.path.join(self.export_path, "{}_{}.json".format(provider, page))
                     with open(export_file_path, "w") as f:
                         json.dump(results, f)
                     results = []
@@ -109,7 +113,7 @@ class Query(object):
 
         return int(response.headers["CMR-Hits"])
 
-    def get_all(self, start_page):
+    def get_all(self, start_page=1):
         """
         Returns all of the results for the query. This will call hits() first to determine how many
         results their are, and then calls get() with that number. This method could take quite
@@ -734,6 +738,27 @@ class CollectionQuery(Query):
         self.params["concept_id"] = IDs
 
         return self
+    
+    
+    def entry_id(self, entry_id):
+        if entry_id is None:
+            raise ValueError("Please provide entry id")
+
+        entry_id = quote(entry_id)
+
+        self.params['entry_id'] = entry_id
+
+        return self
+    
+    def science_keywords(self, science_keywords):
+        if science_keywords is None:
+            raise ValueError("Please provide science_keywords")
+
+        self.params["science_keywords"] = science_keywords
+
+        return self
+
+
 
     def _valid_state(self):
         return True
