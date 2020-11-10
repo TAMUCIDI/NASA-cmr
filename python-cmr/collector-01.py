@@ -4,7 +4,7 @@ import json
 mode="CMR_OPS"
 
 api = CollectionQuery(mode=mode)
-# api = GranuleQuery(mode="CMR_UAT")
+# api = GranuleQuery(mode=mode)
 
 collections = api.format("native").concept_id(["C1214614210-SCIOPS"]).get_all()
 

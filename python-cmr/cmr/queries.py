@@ -86,9 +86,9 @@ class Query(object):
                 else:
                     results.extend(latest)
                 page += 1
-                count += 2000
+                count += page_size
                 # update pbar
-                pbar.update(2000)
+                pbar.update(page_size)
 
         return results
 
