@@ -56,6 +56,7 @@ class Query(object):
         results = []
         count = 0
         page = start_page
+        error_stack = []
         with tqdm(total=limit-(start_page * page_size)) as pbar:
             while count < limit:
 
@@ -64,7 +65,15 @@ class Query(object):
                 try:
                     response.raise_for_status()
                 except exceptions.HTTPError as ex:
-                    raise RuntimeError(ex.response.text)
+                    print(RuntimeError(ex.response.text))
+                    
+                    error_stack.append(RuntimeError(ex.response.text))
+                    page += 1
+                    count += page_size
+                    # update pbar
+                    pbar.update(page_size)
+
+                    continue
 
                 if self._format == "json":
                     latest = response.json()['feed']['entry']
